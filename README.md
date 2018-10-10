@@ -33,7 +33,7 @@ The generated images **unfortunately** do not really resemble the yakusha-e genr
 Find below the generated images over the epochs: `[0, 200, 1200, 2200, 3400 , 4400]`:  
 
 
-**Epoch 0 (so technically just noise):**
+**Epoch 0 (so technically just noise):**  
 ![epoch0](https://github.com/ptl93/deepArt-generation/blob/master/model/images/dcgan_0.jpg)  
 **Epoch 200**:  
 ![epoch200](https://github.com/ptl93/deepArt-generation/blob/master/model/images/dcgan_200.jpg)  
