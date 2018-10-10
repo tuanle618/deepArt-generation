@@ -17,7 +17,7 @@ The repository-folder is structured onto 3 folders named `data`, `source` and  `
   
   `train_model.py`: this script creates a [deep convolutional generative adversarial network](https://medium.com/@jonathan_hui/gan-dcgan-deep-convolutional-generative-adversarial-networks-df855c438f) and trains the stacked model over **115 images**, **4600 epochs** and a **batch size of 10**.
 - In `model` the weights for generator and discriminator networks are saved. The `train_model.py` saves every 200 epochs the weights and 4 images of the current generator model.  
-Hence, the `model` folder also contains the development of how the generator is trained with respect to its weights, such that it *should* generate images which resemble the original training images. 
+Hence, the `model` folder also contains the development of how the generator is trained with respect to its weights, such that it *should* generate images which resemble the original training images.  Note that the model weights are not uploaded on GitHub (see .gitignore file) because they are together too large (generator network about 205mb and discriminator network about 10mb). If you wish to work with my final weights, please contact me via eMail: tuanle@hotmail.de
   
 ## Data 
 Data is scraped from [wikiart](https://www.wikiart.org/en/) in the python-script [data_scraping.py](https://github.com/ptl93/deepArt-generation/blob/master/source/data_scraping.py). In this version the genre **yakusha-e** is selected as genre, since I was/am interested into asian arts and there are not so many images available in the wikiart database. If you want to scrape another genre, simply change the string variable in line 20 `genre_to_scrape = "yakusha-e"` to any other genre of interest.
@@ -53,7 +53,7 @@ The code was executed using `Python 3.6` and for deep learning `keras`-framework
 Note that I ran the `train_model.py` script with local-GPU using **NVIDIA GeForce GTX 1050 Ti**. When runing this script with CPU-tensoflow, execution time might be longer. On GPU the training time took about *1.5 hours*.
   
 This paragraph describes how to set up your environment locally. Make you have python-module `virtualenv` installed.  
-If you do not wish to run the training script on a virtual environment, make sure you have all modules/libraries properly installed and start from step on.  
+If you do not wish to run the training script on a virtual environment, make sure you have all modules/libraries properly installed and start from step 4 on.  
 
 Step 1 - Clone this repo:  
 ```git 
