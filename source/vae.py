@@ -33,7 +33,7 @@ class VAE():
         self.optimizer = Adadelta()
         self.intermediate_dim_1 = 256
         self.intermediate_dim_2 = 128
-        self.latent_dim = 200
+        self.latent_dim = 100
         self.shape_info = None
         self.random_normal_mean = 0.0
         self.random_normal_stddev = 1.0
