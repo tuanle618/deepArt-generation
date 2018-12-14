@@ -5,7 +5,7 @@
 
 data/train_data.npz
 data/Japanese Art/*
-data/merged_japanese/*
+
 
 #weights for models:
 *.h5
