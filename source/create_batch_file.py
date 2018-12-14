@@ -5,6 +5,7 @@
 @email: tuanle@hotmail.de
 """
 import sys
+import os
 def write_batch_file(model, start_epoch=0, epochs=500, batch_size=16, save_intervals=50, final_epoch=10000):
     #init batch_file
     batch_file = open("train_cycle_model-{}_start-{}_end-{}.bat".format(model, start_epoch, final_epoch), "w")
@@ -14,7 +15,7 @@ def write_batch_file(model, start_epoch=0, epochs=500, batch_size=16, save_inter
     steps = (final_epoch-start_epoch) // epochs
     iterator = range(steps)
     python_path = sys.executable
-    script_path = r"E:\deepArt-generation\source\train_model.py"
+    script_path = os.path.join(os.getcwd(), 'train_model.py')
     base_cycle = start_epoch / epochs
     for i in iterator:
         cycle = int(base_cycle + i + 1)
