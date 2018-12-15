@@ -52,8 +52,10 @@ Here are some scraped image (in original size):
 ![Image 4](https://github.com/ptl93/deepArt-generation/blob/master/data/merged_japanese/yamamura-toyonari_8.jpg)
 
 ## Generated Images  
-The generated images from both VAE and DCGAN **unfortunately** do not really resemble the yakusha-e genre, more an *abstract* version of it. With this data base the VAE performs **better** generating artificial images than the DCGAN.
-As an example below some output of the VAE_2 Model:
+The generated images from both VAE and DCGAN **unfortunately** do not really resemble the yakusha-e genre, more an *abstract* version of it. I believe this lays in the complex structure of the input images. Even after rescaling from first (256,256) to shape (128,128) the results the results are still more abstract.  
+With this data base the VAE performs **better** generating artificial images than the DCGAN.
+As an example below some output of the VAE_2 Model:  
+
 ![genImage 1](https://github.com/ptl93/deepArt-generation/blob/master/sample_generated_images/VAE/epoch_13000_final_generated_images_5.jpg)
 ![genImage 2](https://github.com/ptl93/deepArt-generation/blob/master/sample_generated_images/VAE/epoch_26000_final_generated_images_6.jpg)
 ![genImage 3](https://github.com/ptl93/deepArt-generation/blob/master/sample_generated_images/VAE/epoch_35000_final_generated_images_3.jpg)
