@@ -16,7 +16,7 @@ In both, DCGAN and VAE the default dimension of the latent space is 100.
 ## Structure ##
 The repository-folder is structured onto 3 folders named `data`, `source`,  `model` and `sample_generated_images` (for documentation).
 - In `data` the scraped training images are stored.
-- In `source` all python-scripts are stored. There are 3 following scripts:
+- In `source` all python-scripts are stored. There are 8 following scripts:
 
   `data_scraping.py`: this script fetches images from a specific [wikiart genre](https://www.wikiart.org/en/artists-by-genre) and/or from a [specific style](https://www.wikiart.org/en/paintings-by-style) . Currently the genre scraped is **yakusha-e** and style is **Japanese Art**.  
   
@@ -38,7 +38,7 @@ The repository-folder is structured onto 3 folders named `data`, `source`,  `mod
    `create_batch_file.py`: In order to overcome memory errors when training on a higher epoch and batch size, I came up with the idea to split the desired number of running epochs into chunks. E.g defining epochs=20000 and due to memory error one can only execute with tensorflow backend 500 epochs each, those 20000 epochs will be split into equal sized chunks of 500. Hence, this script creates a batch file for executing the `train_model.py` with a desired number of epochs and batch size. Note that this procedure with training has to be tried out manually, to see how much your computer can process (e.g how many epochs in one exeuction run and what the most number of epochs is). For all 7 models a batch size of 16 and epochs of 500 were sufficient and alright. Going up with the number of epochs and batch size has led to memory error. 
    
   
-- In `model` depending on the selected model `[DCGAN_1, DCGAN_2, DCGAN_3, VAE_1, VAE_2, VAE_3, VAE_4]` a subdirectory with the modelname will be created and there the weights for generator/encoder and discriminator/decoder networks saved. The `train_model.py` saves every 50 epochs the weights and 4 images of the current generative model. If the final epoch is reached, 10 images of the current generative model are generated in full-mode (128 x 128).
+- In `model` depending on the selected model `[DCGAN_1, DCGAN_2, DCGAN_3, VAE_1, VAE_2, VAE_3, VAE_4]` a subdirectory with the modelname will be created and there the weights for generator/encoder and discriminator/decoder networks saved. The `train_model.py` if executing with default arguments saves every 250 epochs the weights and 4 images of the current generative model. If the final epoch is reached, 10 images of the current generative model are generated in full-mode (128 x 128).
 
 Hence, the `model` folder also contains the development of how the generative models are trained with respect to its weights, such that it *should* generate images which resemble the original training images.  Note that the model weights are not uploaded on GitHub (see .gitignore file) because they are together too large. If you wish to work with my final weights, please contact me via eMail: tuanle@hotmail.de
   
