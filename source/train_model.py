@@ -138,13 +138,13 @@ if __name__ == "__main__":
             batch_size= 32
             save_intervals = 50
     else:
-        model = "VAE_3"
+        model = "VAE_2"
         init_train = True
         start_epoch = 0
         cycle = 1
-        epochs = 100
-        batch_size= 32
-        save_intervals = 50
+        epochs = 500
+        batch_size= 16
+        save_intervals = 250
 
     main(model=model, init_train=init_train, start_epoch=start_epoch,
          cycle=cycle, epochs=epochs, batch_size=batch_size, save_intervals=save_intervals)

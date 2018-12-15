@@ -42,4 +42,4 @@ if __name__ == "__main__":
     """
     This script write the train batch file
     """
-    write_batch_file(model="VAE_4", start_epoch=0, epochs=250, batch_size=12, save_intervals=250, final_epoch=15000)
+    write_batch_file(model="VAE_2", start_epoch=0, epochs=500, batch_size=16, save_intervals=250, final_epoch=15000)
