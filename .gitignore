@@ -8,14 +8,12 @@ data/Japanese Art/*
 
 ##show only DCGAN_1
 model/DCGAN_1/*
-!model/DCGAN_1/images
 model/DCGAN_2/*
 model/DCGAN_3/*
 
 
 model/VAE_1/*
-model/VAE_2/*.hdf5
-!model/VAE_2/images
+model/VAE_2/*
 model/VAE_3/*
 model/VAE_4/*
 model/VAE_2_dim200/*
