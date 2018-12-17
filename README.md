@@ -8,14 +8,15 @@ In contrast to [Variational Autoencoders](https://sergioskar.github.io/Autoencod
 Whereas the variational autoencoder consists of encoder mapping the input data $x$ into a latent space $z$ and the decoder maps the latent space back to the original image (or rather reconstruction image). The key fact of the variational autoencoder lies in the point that the latent space p(z|x) follows a posterior distribution which we try to approximate.
 For more insights have a look at following [blogpost about vae](https://jaan.io/what-is-variational-autoencoder-vae-tutorial/).
 In VAE one tries to approximate the true posterior distribution p(z|x) with a variational posterior q(z|x) where q() follows a multivariate normal with zero mean and unit covariance.  
-As metric to be optimize one tries to minimize the [Kullback-Leibler divergence](https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence) when approximating p(z|x) with q(z|x). Hence we gain following loss function: insert image  
+As metric to be optimize one tries to minimize the [Kullback-Leibler divergence](https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence) when approximating p(z|x) with q(z|x). Hence we gain following loss function:  
+![Image VAE Loss with KL-divergence](https://github.com/ptl93/deepArt-generation/blob/master/sample_generated_images/VAE/optim_problem.PNG)
   
 In both, DCGAN and VAE the default dimension of the latent space is 100.
 
 ## Structure ##
 The repository-folder is structured onto 3 folders named `data`, `source`,  `model` and `sample_generated_images` (for documentation).
 - In `data` the scraped training images are stored.
-- In `source` all python-scripts are stored. There are 3 following scripts:
+- In `source` all python-scripts are stored. There are 8 following scripts:
 
   `data_scraping.py`: this script fetches images from a specific [wikiart genre](https://www.wikiart.org/en/artists-by-genre) and/or from a [specific style](https://www.wikiart.org/en/paintings-by-style) . Currently the genre scraped is **yakusha-e** and style is **Japanese Art**.  
   
@@ -29,16 +30,15 @@ The repository-folder is structured onto 3 folders named `data`, `source`,  `mod
    
    `try_init_models.py`: this scripts is just for testing and initiates the 7 models in the main function when executing this script in the shell.
    
-   `train_model.py`: this script loads by default the second VAE model and trains it on 500 epochs with a batch size of 16 images. Every 250 epochs the model will be saved and images from the current model generated. The `train_model.py` has several input arguments when exeuting in shell. Those are:
+   `train_model.py`: this script initiates a generative model and trains it on the scraped data. In order to get good results I manually merged data from `yakusha-e` and `Japanese Art`subdirectory in `data` into `data/merged_japanese`. Hence the data will be taken from this subdirectory. By default the second VAE model and trains it on 500 epochs with a batch size of 16 images. Every 250 epochs the model will be saved and images from the current model generated. The `train_model.py` has several input arguments when exeuting in shell. Those are:
    ```python 
    {'model' = "VAE_2,'init_train' = True, start_epoch = 0,'cycle' = 1, 'epochs' = 500, 'batch_size'= 16,'save_intervals' = 250}
    ```
    
    `create_batch_file.py`: In order to overcome memory errors when training on a higher epoch and batch size, I came up with the idea to split the desired number of running epochs into chunks. E.g defining epochs=20000 and due to memory error one can only execute with tensorflow backend 500 epochs each, those 20000 epochs will be split into equal sized chunks of 500. Hence, this script creates a batch file for executing the `train_model.py` with a desired number of epochs and batch size. Note that this procedure with training has to be tried out manually, to see how much your computer can process (e.g how many epochs in one exeuction run and what the most number of epochs is). For all 7 models a batch size of 16 and epochs of 500 were sufficient and alright. Going up with the number of epochs and batch size has led to memory error. 
    
-  `train_model.py`: this script initiates a generative model and trains it on the scraped data. In order to get good results I manually merged data from `yakusha-e` and `Japanese Art`subdirectory in `data` into `data/merged_japanese`. Hence the data will be taken from this subdirectory.
   
-- In `model` depending on the selected model `[DCGAN_1, DCGAN_2, DCGAN_3, VAE_1, VAE_2, VAE_3, VAE_4]` a subdirectory with the modelname will be created and there the weights for generator/encoder and discriminator/decoder networks saved. The `train_model.py` saves every 50 epochs the weights and 4 images of the current generative model. If the final epoch is reached, 10 images of the current generative model are generated in full-mode (128 x 128).
+- In `model` depending on the selected model `[DCGAN_1, DCGAN_2, DCGAN_3, VAE_1, VAE_2, VAE_3, VAE_4]` a subdirectory with the modelname will be created and there the weights for generator/encoder and discriminator/decoder networks saved. The `train_model.py` if executing with default arguments saves every 250 epochs the weights and 4 images of the current generative model. If the final epoch is reached, 10 images of the current generative model are generated in full-mode (128 x 128).
 
 Hence, the `model` folder also contains the development of how the generative models are trained with respect to its weights, such that it *should* generate images which resemble the original training images.  Note that the model weights are not uploaded on GitHub (see .gitignore file) because they are together too large. If you wish to work with my final weights, please contact me via eMail: tuanle@hotmail.de
   
@@ -52,8 +52,10 @@ Here are some scraped image (in original size):
 ![Image 4](https://github.com/ptl93/deepArt-generation/blob/master/data/merged_japanese/yamamura-toyonari_8.jpg)
 
 ## Generated Images  
-The generated images from both VAE and DCGAN **unfortunately** do not really resemble the yakusha-e genre, more an *abstract* version of it. With this data base the VAE performs **better** generating artificial images than the DCGAN.
-As an example below some output of the VAE_2 Model:
+The generated images from both VAE and DCGAN **unfortunately** do not really resemble the yakusha-e genre, more an *abstract* version of it. I believe this lays in the complex structure of the input images. Even after rescaling from first (256,256) to shape (128,128) the results the results are still more abstract.  
+With this data base the VAE performs **better** generating artificial images than the DCGAN.
+As an example below some output of the VAE_2 Model:  
+
 ![genImage 1](https://github.com/ptl93/deepArt-generation/blob/master/sample_generated_images/VAE/epoch_13000_final_generated_images_5.jpg)
 ![genImage 2](https://github.com/ptl93/deepArt-generation/blob/master/sample_generated_images/VAE/epoch_26000_final_generated_images_6.jpg)
 ![genImage 3](https://github.com/ptl93/deepArt-generation/blob/master/sample_generated_images/VAE/epoch_35000_final_generated_images_3.jpg)
