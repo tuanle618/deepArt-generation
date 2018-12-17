@@ -114,7 +114,8 @@ def main(model, init_train, start_epoch, cycle, epochs, batch_size, save_interva
 
 if __name__ == "__main__":
     """
-    This script runs the main training programm for the model. Note Model either has to be 'DCGAN', 'VAE', 'VAE_2' or 'VAE_3'
+    This script runs the main training programm for the model. Note Model either has to be
+    'DCGAN_1', 'DCGAN_2', 'DCGAN_3', 'VAE_1', 'VAE_2', 'VAE_3' or 'VAE_4'
     """
     ### If user inserts via shell console
     if len(sys.argv) >= 2:
@@ -130,13 +131,14 @@ if __name__ == "__main__":
             print("Trying to print out sys.argv")
             print(str(sys.argv))
         except:
-            model = "VAE_3"
+            model = "VAE_2"
             init_train = True
             start_epoch = 0
             cycle = 1
-            epochs = 100
-            batch_size= 32
-            save_intervals = 50
+            epochs = 500
+            batch_size= 16
+            save_intervals = 250
+    ### If no arguments were inserted when calling this script
     else:
         model = "VAE_2"
         init_train = True

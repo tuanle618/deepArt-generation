@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Dec  6 22:48:58 2018
-
-@author: Tuan
+@title: try_init_models.py
+@author: Tuan Le
+@email: tuanle@hotmail.de
 """
 
 from dcgan import DCGAN
@@ -10,11 +10,14 @@ from vae import VAE
 
 if __name__ == "__main__":
 
-    print("Init DCGAN_1 model")
+    print("Init DCGAN_1 model...")
     dcgan_1 = DCGAN(name='DCGAN_1')
     
-    print("Init DCGAN_2 model")
-    dcgan_1 = DCGAN(name='DCGAN_2')
+    print("Init DCGAN_2 model...")
+    dcgan_2 = DCGAN(name='DCGAN_2')
+    
+    print("Init DCGAN_3 model...")
+    dcgan_3 = DCGAN(name='DCGAN_3')
    
     print('Init VAE_1 model...')
     vae_1 =  VAE(name='VAE_1')

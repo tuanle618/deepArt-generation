@@ -40,6 +40,6 @@ def write_batch_file(model, start_epoch=0, epochs=500, batch_size=16, save_inter
 
 if __name__ == "__main__":
     """
-    This script write the train batch file
+    This script writes the train batch file to split the desired epochs in chunks where each chunks is executed as training cycle.
     """
     write_batch_file(model="VAE_2", start_epoch=0, epochs=500, batch_size=16, save_intervals=250, final_epoch=15000)
