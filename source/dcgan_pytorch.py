@@ -6,7 +6,7 @@ import math
 import torchvision.transforms as transforms
 from torchvision.utils import save_image
 
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Dataset
 from torchvision import datasets
 from torch.autograd import Variable
 
@@ -32,6 +32,23 @@ opt = parser.parse_args()
 print(opt)
 
 cuda = True if torch.cuda.is_available() else False
+
+class artData(Dataset):
+    """ Custom pytorch dataset"""
+
+    def __init__(self, filepath):
+        self.rootdir = filepath
+        self.data = np.load(file=filepath)["a"]
+
+    def __len__(self):
+        return len(len(self.data))
+
+    def __getitem__(self, item):
+        return self.data[i]
+
+    def __str__(self):
+        return "Dataset containts {} images".format(len(self.data))
+
 
 
 def weights_init_normal(m):
@@ -126,19 +143,12 @@ generator.apply(weights_init_normal)
 discriminator.apply(weights_init_normal)
 
 # Configure data loader
-dataloader = torch.utils.data.DataLoader(
-    datasets.MNIST(
-        "data/train_data.npz",
-        train=True,
-        download=True,
-        transform=transforms.Compose(
-            [transforms.Resize(opt.img_size), transforms.ToTensor(), transforms.Normalize([0.5], [0.5])]
-        ),
-    ),
-    batch_size=opt.batch_size,
-    shuffle=True,
-)
+artDataset = artData(filepath="../data/train_data.npz")
 
+artDataLoader = DataLoader(dataset=artData,
+                           batch_size=16,
+                           shuffle=True,
+                           num_workers=6)
 # Optimizers
 optimizer_G = torch.optim.Adam(generator.parameters(), lr=opt.g_lr, betas=(opt.b1, opt.b2))
 optimizer_D = torch.optim.Adam(discriminator.parameters(), lr=opt.d_lr, betas=(opt.b1, opt.b2))
@@ -150,7 +160,7 @@ Tensor = torch.cuda.FloatTensor if cuda else torch.FloatTensor
 # ----------
 
 for epoch in range(opt.n_epochs):
-    for i, (imgs, _) in enumerate(dataloader):
+    for i, (imgs, _) in enumerate(artDataLoader):
 
         # Adversarial ground truths
         valid = Variable(Tensor(imgs.shape[0], 1).fill_(1.0), requires_grad=False)
@@ -193,9 +203,9 @@ for epoch in range(opt.n_epochs):
 
         print(
             "[Epoch %d/%d] [Batch %d/%d] [D loss: %f] [G loss: %f]"
-            % (epoch, opt.n_epochs, i, len(dataloader), d_loss.item(), g_loss.item())
+            % (epoch, opt.n_epochs, i, len(artDataLoader), d_loss.item(), g_loss.item())
         )
 
-        batches_done = epoch * len(dataloader) + i
+        batches_done = epoch * len(artDataLoader) + i
         if batches_done % opt.sample_interval == 0:
             save_image(gen_imgs.data[:25], "images/%d.png" % batches_done, nrow=5, normalize=True)
