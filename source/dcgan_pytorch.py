@@ -27,7 +27,7 @@ parser.add_argument("--n_cpu", type=int, default=8, help="number of cpu threads 
 parser.add_argument("--latent_dim", type=int, default=100, help="dimensionality of the latent space")
 parser.add_argument("--img_size", type=int, default=128, help="size of each image dimension")
 parser.add_argument("--channels", type=int, default=3, help="number of image channels")
-parser.add_argument("--sample_interval", type=int, default=400, help="interval between image sampling")
+parser.add_argument("--sample_interval", type=int, default=5, help="interval between image sampling")
 opt = parser.parse_args()
 print(opt)
 
@@ -38,13 +38,13 @@ class artData(Dataset):
 
     def __init__(self, filepath):
         self.rootdir = filepath
-        self.data = np.load(file=filepath)["a"]
+        self.data = np.load(file=filepath)["a"].swapaxes(1,3).swapaxes(2,3)
 
     def __len__(self):
         return len(self.data)
 
     def __getitem__(self, item):
-        return self.data[i]
+        return self.data[item]
 
     def __str__(self):
         return "Dataset containts {} images".format(len(self.data))
@@ -115,7 +115,7 @@ class Discriminator(nn.Module):
 
         # The height and width of downsampled image
         ds_size = opt.img_size // 2 ** 4
-        self.adv_layer = nn.Sequential(nn.Linear(in_features=128 * ds_size ** 2, out_features= 1),
+        self.adv_layer = nn.Sequential(nn.Linear(in_features=128 * ds_size ** 2, out_features=1),
                                        nn.Sigmoid())
 
     def forward(self, img):
@@ -133,6 +133,9 @@ adversarial_loss = torch.nn.BCELoss()
 generator = Generator()
 discriminator = Discriminator()
 
+print(generator)
+print(discriminator)
+
 if cuda:
     generator.cuda()
     discriminator.cuda()
@@ -148,7 +151,7 @@ artDataset = artData(filepath="../data/train_data.npz")
 artDataLoader = DataLoader(dataset=artDataset,
                            batch_size=16,
                            shuffle=True,
-                           num_workers=6)
+                           num_workers=0)
 # Optimizers
 optimizer_G = torch.optim.Adam(generator.parameters(), lr=opt.g_lr, betas=(opt.b1, opt.b2))
 optimizer_D = torch.optim.Adam(discriminator.parameters(), lr=opt.d_lr, betas=(opt.b1, opt.b2))
@@ -208,4 +211,4 @@ for epoch in range(opt.n_epochs):
 
         batches_done = epoch * len(artDataLoader) + i
         if batches_done % opt.sample_interval == 0:
-            save_image(gen_imgs.data[:25], "images/%d.png" % batches_done, nrow=5, normalize=True)
+            save_image(gen_imgs.data[:16], "images/%d.png" % batches_done, nrow=4, normalize=True)
