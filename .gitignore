@@ -2,6 +2,7 @@
 #*.jpeg
 #*.jpg
 #*.png
+.idea*
 
 data/train_data.npz
 data/Japanese Art/*
