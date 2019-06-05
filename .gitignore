@@ -3,6 +3,7 @@
 #*.jpg
 #*.png
 .idea*
+*flickr_api*
 
 data/train_data.npz
 data/Japanese Art/*

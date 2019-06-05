@@ -11,6 +11,9 @@ def args_parser():
     parser.add_argument("-kw", "--keywords", type=str, default="nude painting", dest="keywords", nargs= "+",
                         help="String which keywords to scrape. If more keywords should be scraped use this parameter several times.\
                         e.g --keyword 'nude art' --keyword 'landscape'. Default: 'nude painting'")
+    parser.add_argument("-ac", "--api_cred", type=str, dest="api_cred", default=None,
+                        help="Where .txt file for flickr API is stored. Note it should be 2 lines\
+                        with API_KEY=... and API_SECRET_KEY=... Default: None and checks if its inserted within this script.")
     parser.add_argument("-sp", "--save_path", type=str, dest="save_path", default="nude-painting",
                         help="Directory where the images should be saved. The images will be saved to 'data/save_path' \
                         subdirectory where <save_path> needs to be defined. Default 'nude-painting'")
@@ -23,7 +26,68 @@ def args_parser():
 
     return args
 
+def load_api_cred(path):
+    """
+    Loads the API_KEY and API_SECRET_KEY from a .txt or .json file.
+    :param path: Path where keys are stored
+    :return: API_KEY and API_SCRECT_KEY as string
+    """
+    if path.endswith("txt"):
+        with open(path, "r") as fp:
+            api_creds = fp.readlines()
+            api_creds = [foo.replace("\n", "") for foo in api_creds]
+
+        ## check if length is 2
+        if len(api_creds) != 2:
+            print("More Lines within {} file. Check again!".format(path))
+            quit()
+
+        a = api_creds[0]
+        b = api_creds[1]
+
+        a = a.split("=")
+        b = b.split("=")
+
+        if a[0].lower() == "api_key":
+            API_KEY = a[1]
+        elif a[0].lower() == "api_secret_key":
+            API_SECRET_KEY = a[1]
+        else:
+            print("Wrong naming with variable {}".format(a[0]))
+            quit()
+
+        if b[0].lower() == "api_key":
+            API_KEY = b[1]
+        elif b[0].lower() == "api_secret_key":
+            API_SECRET_KEY = b[1]
+        else:
+            print("Wrong naming with variable {}".format(b[0]))
+            quit()
+
+    elif path.endswith("json"):
+        import json
+        with open(path, "r") as fp:
+            api_creds = json.load(fp)
+
+        for key, value in api_creds.items():
+            if key.lower() == "api_key":
+                API_KEY = value
+            elif key.lower() == "api_secret_key":
+                API_SECRET_KEY = value
+            else:
+                print("JSON file not containing elements API_KEY and/or API_SECRET_KEY! Check again")
+                quit()
+
+    return str(API_KEY), str(API_SECRET_KEY)
+
 def crawl_flickr(keyword, limit, flickr):
+    """
+    Crawls the flickr API based on a keyword and retrieves maximum limit urls.
+    :param keyword: Which text should be searched
+    :param limit: Maximal number of images to be scraped. Note that scraped images can be less if flickr does not provide as many images as wished.
+    :param flickr: flickr.FLICKRAPI instace
+    :return: list of image urls
+    """
     print("Crawl keyword: {}".format(keyword))
     #https://www.flickr.com/services/api/flickr.photos.search.html
     photos = flickr.walk(text=keyword,
@@ -51,15 +115,7 @@ def download_image(tuple):
     urllib.request.urlretrieve(url, filename)
     return 1
 
-
 if __name__ == '__main__':
-
-    ## Flickr API credentials:
-    API_key = None
-    API_secret_key = None
-    # Flickr api access key
-    flickr = flickrapi.FlickrAPI(API_key, API_secret_key, cache=True)
-
 
     print("Python script to scrape images from flickr and download images.")
     args = args_parser()
@@ -69,6 +125,21 @@ if __name__ == '__main__':
     limit = args.limit
     save_path = "../data/" + args.save_path
     n_workers = args.n_workers
+    api_cred = args.api_cred
+
+    if api_cred is not None:
+        API_KEY, API_SECRET_KEY = load_api_cred(path=api_cred)
+    else:
+        ## Insert Flickr API credentials here:
+        API_KEY = None
+        API_SECRET_KEY = None
+
+    # Flickr api access key
+    flickr = flickrapi.FlickrAPI(API_KEY, API_SECRET_KEY, cache=True)
+
+    if api_cred is None and API_KEY is None and API_SECRET_KEY is None:
+        print("No API credentials where inserted as argparse credentials path or within this script! Check again")
+        quit()
 
     if not os.path.exists(save_path):
         os.makedirs(save_path)
@@ -93,8 +164,8 @@ if __name__ == '__main__':
     n_sucess = 0
     for sucess in tqdm(results, total=len(all_urls)):
         n_sucess += sucess
-        ## print out every 100
-        if n_sucess % 100 == 0 and n_sucess != 0 or n_sucess == len(all_urls):
+        ## print out every 1000
+        if n_sucess % 1000 == 0 and n_sucess != 0 or n_sucess == len(all_urls):
             tqdm.write("Downloaded {}/{}".format(n_sucess, len(all_urls)))
 
     print("Downloaded {} images and stored at {}".format(n_sucess, save_path))
