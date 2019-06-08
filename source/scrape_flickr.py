@@ -88,7 +88,7 @@ def crawl_flickr(keyword, limit, flickr):
     :param flickr: flickr.FLICKRAPI instace
     :return: list of image urls
     """
-    print("Crawl keyword: {}".format(keyword))
+    print("\nCrawl keyword: {}".format(keyword))
     #https://www.flickr.com/services/api/flickr.photos.search.html
     photos = flickr.walk(text=keyword,
                          tag_mode="all",
@@ -112,8 +112,11 @@ def crawl_flickr(keyword, limit, flickr):
 
 def download_image(tuple):
     filename, url = tuple
-    urllib.request.urlretrieve(url, filename)
-    return 1
+    try:
+        urllib.request.urlretrieve(url, filename)
+        return 1
+    except:
+        return 0
 
 if __name__ == '__main__':
 
@@ -152,6 +155,8 @@ if __name__ == '__main__':
     else:
         all_urls = crawl_flickr(keywords, limit, flickr)
 
+    print("\nRetrieved {} urls out of {}".format(len(all_urls), limit))
+    print("Removing duplicate URLs..")
     ## remove duplicates
     all_urls = list(set(all_urls))
     print("Total number of scraped links for keywords {} is: {}".format(str(keywords), len(all_urls)))
