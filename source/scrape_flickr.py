@@ -30,7 +30,7 @@ def load_api_cred(path):
     """
     Loads the API_KEY and API_SECRET_KEY from a .txt or .json file.
     :param path: Path where keys are stored
-    :return: API_KEY and API_SCRECT_KEY as string
+    :return: API_KEY and API_SECRECT_KEY as string
     """
     if path.endswith("txt"):
         with open(path, "r") as fp:
