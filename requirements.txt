@@ -2,7 +2,7 @@ urllib.request==3.6
 bs4==4.6.0
 pandas==0.23.0
 re==2.2.1
-numpy==1.14.3
+numpy==1.22.0
 skimage==0.13.1
 matplotlib==2.2.2
 keras==2.2.2
